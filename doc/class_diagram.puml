@@ -1,0 +1,52 @@
+@startuml IoT_Incendie_UML
+
+class Firefighter {
+  - PICamera camera
+  - Humidity Humidity
+  - Temperature Temperature
+
+  + Firefighter()
+}
+
+abstract class Captor {
+  + Captor()
+  + {abstract} retrieveMeasure()
+}
+
+class PICamera {
+  - Image frame
+
+  + PICamera()
+  + retrieveMeasure()
+  + getFrame()
+}
+
+class Humidity {
+  - float humidityValue
+
+  + Humidity()
+  + retrieveMeasure()
+  + getHumidity()
+}
+
+class Temperature {
+  - float temperatureValue
+
+  + Temperature()
+  + retrieveMeasure()
+  + getTemperature()
+}
+
+PICamera --> Firefighter
+Humidity --> Firefighter
+Temperature --> Firefighter
+
+Captor <|-- PICamera
+Captor <|-- Humidity
+Captor <|-- Temperature
+
+legend right
+  La méthode "retrieveMeasure" demande au capteur de mesurer les données
+endlegend
+
+@enduml
