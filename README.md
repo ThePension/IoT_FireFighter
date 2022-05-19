@@ -11,3 +11,6 @@
 - InfluxDB
 - Dashboard avec couleurs (vert = risque faible, orange = risque modéré, rouge = risque élevé, noir = incendie)
 - Notifications en cas de risques élevés ou d'incendie (alarme, mail, voyant de couleur) 
+
+## Sources
+- https://github.com/tobybreckon/fire-detection-cnn
