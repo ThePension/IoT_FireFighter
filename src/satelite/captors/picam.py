@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding:utf-8 -*-
 
 import captor
 import asyncio
@@ -43,4 +44,3 @@ class PiCamera(captor.Captor):
 
     def close(self):
         self.camera.close()
-        

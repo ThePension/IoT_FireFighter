@@ -1,6 +1,8 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
 
 class Measure:
-    def __init__(self, temperature = 0, humidity = 0, pressure = 0, fireRating = 0):
+    def __init__(self, temperature = None, humidity = None, pressure = None, fireRating = None):
         self.name = "Measure"
         self.temperature = temperature
         self.humidity = humidity
