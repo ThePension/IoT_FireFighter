@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import ../common/measure as Measure
+import ../common/measure as measure
 import ./captors/shtc3 as SHTC3
 import ./captors/lps22hb as LPS22HB
 import ./captors/picam as PiCamera
@@ -9,6 +9,7 @@ import ./captors/picam as PiCamera
 import paho.mqtt.client as mqtt
 import sys
 import json
+import datetime import datetime
 
 class firefighter:
     def __init__(self):
@@ -30,13 +31,14 @@ class firefighter:
         self.client.connect(sys.argv[1], 1883, 60)
 
         while self.isRunning:
-            measure = Measure.Measure()
+            measure = measure.Measure()
             measure.temperature = SHTC3.retrieveMeasure()
             measure.humidity = LPS22HB.retrieveMeasure()
             # measure.pressure = LPS22HB.retrieveMeasure()
             measure.fireRating = PiCamera.retrieveMeasure()
+            measure.date = datetime.now()
 
-            client.publish("Measure", json.dumps(measure.__dict__))
+            client.publish("FireFighter/Measure", json.dumps(measure.__dict__))
             time.sleep(5)
 
         self.client.disconnect()
