@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 
 import ../common/measure as Measure
-import ./sensors/shtc3 as SHTC3
-import ./sensors/lps22hb as LPS22HB
-import ./sensors/picam as PiCamera
+import ./captors/shtc3 as SHTC3
+import ./captors/lps22hb as LPS22HB
+import ./captors/picam as PiCamera
 
 class firefighter:
     def __init__(self):
