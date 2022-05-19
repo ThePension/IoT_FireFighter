@@ -11,13 +11,13 @@ class SHTC3(captor.Captor):
         init.argtypes = [ctypes.c_void_p]
         init(None)
 
-    def read_temperature(self):
-        temperature = self.dll.SHTC3_Read_TH
-        temperature.restype = ctypes.c_float
-        temperature.argtypes = [ctypes.c_void_p]
-        return temperature(None)
+    #def read_temperature(self):
+    #    temperature = self.dll.SHTC3_Read_TH
+    #    temperature.restype = ctypes.c_float
+    #    temperature.argtypes = [ctypes.c_void_p]
+    #    return temperature(None)
 
-    def read_humidity(self):
+    def retrieveMeasure(self):
         humidity = self.dll.SHTC3_Read_RH
         humidity.restype = ctypes.c_float
         humidity.argtypes = [ctypes.c_void_p]

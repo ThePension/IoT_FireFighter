@@ -26,7 +26,7 @@ class PiCamera(captor.Captor):
         self.camera.exposure_compensation = 0
         self.camera.exposure_mode = 'auto'
 
-    def capture(self):
+    def retrieveMeasure(self):
         stream = io.BytesIO()
         self.camera.capture(stream, format='jpeg')
         data = stream.getvalue()
@@ -43,3 +43,4 @@ class PiCamera(captor.Captor):
 
     def close(self):
         self.camera.close()
+        
