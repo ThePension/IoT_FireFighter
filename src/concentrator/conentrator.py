@@ -24,6 +24,11 @@ class Concentrator:
         self.influxdb_org = os.environment['INFLUXDB_ORG']
         self.influxdb_bucket = os.environment['INFLUXDB_BUCKET']
 
+        self.mqtt_client = os.environment['MQTT_CLIENT']
+        self.mqtt_brocker = os.environment['MQTT_BROCKER']
+        self.mqtt_port = os.environment['MQTT_PORT']
+        self.mqtt_topic = os.environment['MQTT_TOPIC']
+
         self.run()
 
     def __str__(self):
@@ -47,11 +52,10 @@ class Concentrator:
         """
         self.isRunning = True
 
-        client = paho.Client(os.environment['MQTT_CLIENT'])
+        client = paho.Client(self.mqtt_client)
         client.on_message = on_message
-        client.connect(os.environment['MQTT_BROCKER'],
-                       os.environment['MQTT_PORT'], 60)
-        client.subscribe([("FireFighter/Measure", 0)])  # Default QoS=0
+        client.connect(self.mqtt_brocker, self.mqtt_port, 60)
+        client.subscribe([(self.mqtt_topic, 0)])  # Default QoS=0
         client.loop_forever()
 
     def stop(self):

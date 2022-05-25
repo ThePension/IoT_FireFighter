@@ -1,0 +1,9 @@
+INFLUXDB_SERVER=localhost
+INFLUXDB_TOKEN=root
+INFLUXDB_ORG=concentrator
+INFLUXDB_BUCKET=concentrator
+
+MQTT_CLIENT=mosquitto
+MQTT_BROCKER=localhost
+MQTT_PORT=1883
+MQTT_TOPIC=firefighter/mesure

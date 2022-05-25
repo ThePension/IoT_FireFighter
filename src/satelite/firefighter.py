@@ -9,6 +9,7 @@ import captors.picam as PiCamera
 import paho.mqtt.client as mqtt
 import sys
 import json
+import os
 import datetime
 
 
@@ -18,6 +19,11 @@ class firefighter:
         self.name = "Firefighter"
         self.isRunning = False
         self.measures = []
+
+        self.mqtt_client = os.environment['MQTT_CLIENT']
+        self.mqtt_brocker = os.environment['MQTT_BROCKER']
+        self.mqtt_port = os.environment['MQTT_PORT']
+        self.mqtt_topic = os.environment['MQTT_TOPIC']
 
         self.client = mqtt.Client()
         self.run()
@@ -43,17 +49,22 @@ class firefighter:
         and then disconnects
         """
         self.isRunning = True
-        self.client.connect(sys.argv[1], 1883, 60)
+        self.client.connect(self.mqtt_brocker, self.mqtt_port, 60)
 
         while self.isRunning:
+
+            shtc3 = SHTC3.retrieveMeasure()
+            lps22hb = LPS22HB.retrieveMeasure()
+            picam = PiCamera.retrieveMeasure()
+
             measure = measure.Measure()
-            measure.temperature = SHTC3.retrieveMeasure()
-            measure.humidity = LPS22HB.retrieveMeasure()
-            # measure.pressure = LPS22HB.retrieveMeasure()
-            measure.fireRating = PiCamera.retrieveMeasure()
+            measure.temperature = shtc3['temperature']
+            measure.humidity = shtc3['humidity']
+            measure.pressure = lps22hb['pressure']
+            measure.fireRating = picam['fireRating']
             measure.date = datetime.now()
 
-            client.publish("FireFighter/Measure", json.dumps(measure.__dict__))
+            client.publish(self.mqtt_topic, json.dumps(measure.__dict__))
             time.sleep(5)
 
         self.client.disconnect()

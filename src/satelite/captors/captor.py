@@ -1,8 +1,7 @@
 class Captor:
 
-    def retrieveMeasure(self) -> list():
+    def retrieveMeasure(self) -> dict():
         """
-        This function retrieves the measure of the captor.
-        return: list of measurement by captor
+        This function retrieves the current measure from the sensor and returns it as a dictionary
         """
         raise NotImplementedError

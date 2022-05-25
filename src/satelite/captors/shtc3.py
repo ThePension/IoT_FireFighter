@@ -30,7 +30,8 @@ class SHTC3(captor.Captor):
         humidity = self.dll.SHTC3_Read_RH
         humidity.restype = ctypes.c_float
         humidity.argtypes = [ctypes.c_void_p]
-        return (temperature(None), humidity(None))
+        return {'temperature': temperature(None), 'humidity': humidity(None)}
+
 
 # it test if the SHTC3 class is working
 if __name__ == "__main__":
