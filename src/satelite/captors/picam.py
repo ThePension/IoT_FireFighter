@@ -43,7 +43,7 @@ class PiCamera(captor.Captor):
         self.camera.capture(stream, format='jpeg')
         data = stream.getvalue()
         stream.close()
-        return {'fireRating':data}
+        return {'frame':data}
 
     async def start_continuous_capture(self):
         """
