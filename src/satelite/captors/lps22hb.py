@@ -67,13 +67,17 @@ class LPS22HB(captor.Captor):
 
     def retrieveMeasure(self):
         u8Buf = [0,0,0]
+
+        PRESS_DATA = 0.0
+        TEMP_DATA = 0.0
+
         # Generate a new temperature data
         self.LPS22HB_START_ONESHOT()
         if (lps22hb.read_byte(LPS_STATUS)&0x02)==0x02:
             u8Buf[0]=self.read_byte(LPS_TEMP_OUT_L)
             u8Buf[1]=self.read_byte(LPS_TEMP_OUT_H)
-            return ((u8Buf[1]<<8)+u8Buf[0])/100.0
-        return 0
+            return (((u8Buf[1]<<8)+u8Buf[0])/100.0)
+        return (0)
 
 
 if __name__ == '__main__':
