@@ -1,18 +1,20 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import common.measure as measure
-import captors.shtc3 as SHTC3
-import captors.lps22hb as LPS22HB
-import captors.picam as PiCamera
-
 import paho.mqtt.client as mqtt
 import sys
 import json
 import os
 import datetime
+import time
 from fire_detection_cnn.firenet import detect_fire
 
+sys.path.append("../common")
+
+import measure
+import captors.shtc3 as SHTC3
+import captors.lps22hb as LPS22HB
+import captors.picam as PiCamera
 
 # Is the main class whom is running on the raspberry pi
 class firefighter:
@@ -20,13 +22,13 @@ class firefighter:
         self.name = "Firefighter"
         self.isRunning = False
 
-        self.mqtt_client = os.environment['MQTT_CLIENT']
-        self.mqtt_brocker = os.environment['MQTT_BROCKER']
-        self.mqtt_port = os.environment['MQTT_PORT']
-        self.mqtt_topic = os.environment['MQTT_TOPIC']
+        # env variable in /etc/profile.d/91mqtt.sh
+        self.mqtt_brocker = os.environ['MQTT_BROCKER']
+        self.mqtt_port = os.environ['MQTT_PORT']
+        self.mqtt_topic = os.environ['MQTT_TOPIC']
 
         self.client = mqtt.Client()
-        self.run()
+        self._run()
 
     def __str__(self):
         """
@@ -49,25 +51,31 @@ class firefighter:
         and then disconnects
         """
         self.isRunning = True
-        self.client.connect(self.mqtt_brocker, self.mqtt_port, 60)
+        self.client.connect(self.mqtt_brocker, int(self.mqtt_port), 60)
+
+        shtc3 = SHTC3.SHTC3()
+        lps22hb = LPS22HB.LPS22HB()
+        #picam = PiCamera.PiCamera() the open cv part is not working
 
         while self.isRunning:
 
-            shtc3 = SHTC3.retrieveMeasure()
-            lps22hb = LPS22HB.retrieveMeasure()
-            picam = PiCamera.retrieveMeasure()
+            msht3 = shtc3.retrieveMeasure()
+            mlps22hb = lps22hb.retrieveMeasure()
+            #mpicam = picam.retrieveMeasure()
 
-            measure = measure.Measure()
-            measure.temperature = shtc3['temperature']
-            measure.humidity = shtc3['humidity']
-            measure.pressure = lps22hb['pressure']
+            msre = measure.Measure()
+            msre.temperature = msht3['temperature']
+            msre.humidity = msht3['humidity']
+            msre.pressure = mlps22hb['pressure']
 
-            fireDetected = detect_fire(picam['frame'])
+            #fireDetected = detect_fire(mpicam['frame'])
 
-            measure.fireRating = evaluateRating(measure, fireDetected)
-            measure.date = datetime.now()
+            fireDetected = False
 
-            client.publish(self.mqtt_topic, json.dumps(measure.__dict__))
+            msre.fireRating = self.evaluateRating(msre, fireDetected)
+            msre.date = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
+            self.client.publish(self.mqtt_topic, json.dumps(msre.__dict__))
             time.sleep(5)
 
         self.client.disconnect()
@@ -82,7 +90,7 @@ class firefighter:
         rate = 0
         if fireDetected:
             return 3
-        
+
         if measure.temperature > 100:
             rate += 1
 

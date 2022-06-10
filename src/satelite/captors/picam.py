@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
-import captor
+from captors.captor import Captor
 import asyncio
 import sys
 import time
@@ -17,7 +17,7 @@ else:
 
 # It's a class that inherits from the Captor class and is used to capture images from the Raspberry Pi
 # camera
-class PiCamera(captor.Captor):
+class PiCamera(Captor):
     def __init__(self):
         """
         The function sets the camera resolution to 640x480, the framerate to 10, the rotation to 0, the

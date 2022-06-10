@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 
-import captor
+from captors.captor import Captor
 import measure
 import time
 import smbus
@@ -36,7 +36,7 @@ LPS_RES = 0x33  # Filter reset register
 
 
 # It's a captor that can read the pressure and temperature from a LPS22HB sensor
-class LPS22HB(captor.Captor):
+class LPS22HB(Captor):
     def __init__(self, address=LPS22HB_I2C_ADDRESS):
         """
         The function is called __init__ and it takes one argument, address, which is set to the default
@@ -69,7 +69,7 @@ class LPS22HB(captor.Captor):
         Buf |= 0x01  # ONE_SHOT Set 1
         self._write_byte(LPS_CTRL_REG2, Buf)
 
-    def read_byte(self, cmd):
+    def _read_byte(self, cmd):
         """
         It reads a byte from the I2C device at the address specified by the address parameter
 
@@ -78,7 +78,7 @@ class LPS22HB(captor.Captor):
         """
         return self._bus.read_byte_data(self._address, cmd)
 
-    def read_u16(self, cmd):
+    def _read_u16(self, cmd):
         """
         It reads two bytes from the I2C bus, and returns the value as a 16-bit unsigned integer
 
@@ -112,14 +112,14 @@ class LPS22HB(captor.Captor):
         while PRESS_DATA == None or TEMP_DATA == None:
             # Generate a new temperature data
             self.LPS22HB_START_ONESHOT()
-            if (lps22hb.read_byte(LPS_STATUS) & 0x01) == 0x01:  # a new pressure data is generated
-                u8Buf[0] = lps22hb.read_byte(LPS_PRESS_OUT_XL)
-                u8Buf[1] = lps22hb.read_byte(LPS_PRESS_OUT_L)
-                u8Buf[2] = lps22hb.read_byte(LPS_PRESS_OUT_H)
+            if (self._read_byte(LPS_STATUS) & 0x01) == 0x01:  # a new pressure data is generated
+                u8Buf[0] = self._read_byte(LPS_PRESS_OUT_XL)
+                u8Buf[1] = self._read_byte(LPS_PRESS_OUT_L)
+                u8Buf[2] = self._read_byte(LPS_PRESS_OUT_H)
                 PRESS_DATA = ((u8Buf[2] << 16)+(u8Buf[1] << 8)+u8Buf[0])/4096.0
-            if (lps22hb.read_byte(LPS_STATUS) & 0x02) == 0x02:   # a new temperature data is generated
-                u8Buf[0] = lps22hb.read_byte(LPS_TEMP_OUT_L)
-                u8Buf[1] = lps22hb.read_byte(LPS_TEMP_OUT_H)
+            if (self._read_byte(LPS_STATUS) & 0x02) == 0x02:   # a new temperature data is generated
+                u8Buf[0] = self._read_byte(LPS_TEMP_OUT_L)
+                u8Buf[1] = self._read_byte(LPS_TEMP_OUT_H)
                 TEMP_DATA = ((u8Buf[1] << 8)+u8Buf[0])/100.0
         return {'temperature':TEMP_DATA, 'pressure':PRESS_DATA}
 

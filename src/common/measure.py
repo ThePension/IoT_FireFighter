@@ -30,7 +30,7 @@ class Measure:
         object
         :return: The name of the attribute and its value.
         """
-        return self.name + ": " + str(self.value)
+        return self.name + ": { temperature :" + str(self.temperature)",: " + str(self.temperature)
 
     def __repr__(self):
         """

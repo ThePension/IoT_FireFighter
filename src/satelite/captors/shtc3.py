@@ -1,17 +1,18 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import captor
+from captors.captor import Captor
 import ctypes
+import os.path
 
 
 # It's a captor that reads the temperature and humidity from a SHTC3 sensor
-class SHTC3(captor.Captor):
+class SHTC3(Captor):
     def __init__(self):
         """
         The function is called init, it returns an integer, and it takes a void pointer as an argument
         """
-        self.dll = ctypes.CDLL("./SHTC3.so")
+        self.dll = ctypes.CDLL(os.path.dirname(os.path.abspath(__file__)) + os.path.sep +"SHTC3.so")
         init = self.dll.init
         init.restype = ctypes.c_int
         init.argtypes = [ctypes.c_void_p]
