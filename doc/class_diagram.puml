@@ -1,6 +1,38 @@
 @startuml IoT_Incendie_UML
+class Measure
+{
+  + string name
+  + float temperature
+  + float humidity
+  + float pressure
+  + int fireRating
+  + datetime date
 
-class Firefighter {
+  + __init__(temperature, humidity, pressure, fireRating, date) : void
+}
+
+class Concentrator
+{
+  + name
+  + isRunning
+  + measures
+  + influxdb_server
+  + influxdb_token
+  + influxdb_org
+  + influxdb_bucket
+  + mqtt_client
+  + mqtt_brocker
+  + mqtt_port
+  + mqtt_topic
+
+  + __init__() : void
+  - _run() : void
+  - _stop() : void
+  - on_message(client, userdata, message) : void
+}
+
+class Firefighter
+{
   + string name
   + string mqtt_brocker
   + string mqtt_port
@@ -15,11 +47,13 @@ class Firefighter {
   - _stop() : void
 }
 
-abstract class Captor {
+abstract class Captor
+{
   + {abstract} retrieveMeasure() : dict
 }
 
-class PICamera {
+class PICamera
+{
   - picamera camera
 
   + __init__() : void
@@ -29,7 +63,8 @@ class PICamera {
   - close() : void
 }
 
-class LPS22HB {
+class LPS22HB
+{
   - byte _address
   - byte _bus
 
@@ -43,10 +78,14 @@ class LPS22HB {
   - _write_byte(cmd, val) : void
 }
 
-class SHTC3 {
+class SHTC3
+{
   + __init__() : void
   + retrieveMeasure() : dict
 }
+
+Measure --> Firefighter
+Measure --> Concentrator
 
 PICamera --> Firefighter
 LPS22HB --> Firefighter
