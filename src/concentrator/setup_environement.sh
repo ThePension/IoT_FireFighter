@@ -12,3 +12,5 @@ INFLUXDB_TOKEN="vr70B3T-4ykI4b9jKBUMuvAFtiCu6_lpU3nkj4a8jIEP4M0D2l5fowHUFRzWQ0Vy
 INFLUXDB_ORG="lucas.gosteli@outlook.com"
 INFLUXDB_BUCKET="lucas.gosteli's Bucket"
 EOF
+
+echo 'Please logout or reboot, for the environment variable be taken into account'

@@ -1,49 +1,60 @@
 @startuml IoT_Incendie_UML
 
 class Firefighter {
-  - PICamera camera
-  - Humidity Humidity
-  - Temperature Temperature
+  + string name
+  + string mqtt_brocker
+  + string mqtt_port
+  + string mqtt_topic
+  + paho_mqtt_client client
 
-  + Firefighter()
+  - bool isRunning
+
+  + __init__() : void
+  + evaluateRating(measure,fireDetected) : int
+  - _run() : void
+  - _stop() : void
 }
 
 abstract class Captor {
-  + Captor()
-  + {abstract} retrieveMeasure()
+  + {abstract} retrieveMeasure() : dict
 }
 
 class PICamera {
-  - Image frame
+  - picamera camera
 
-  + PICamera()
-  + retrieveMeasure()
-  + getFrame()
+  + __init__() : void
+  + retrieveMeasure() : dict
+  - async start_continuous_capture() : void
+  - async stop_continuous_capture() : void
+  - close() : void
 }
 
-class Humidity {
-  - float humidityValue
+class LPS22HB {
+  - byte _address
+  - byte _bus
 
-  + Humidity()
-  + retrieveMeasure()
-  + getHumidity()
+  + __init__(address) : void
+  + LPS22HB_RESET() : void
+  + LPS22HB_START_ONESHOT() : void
+  + retrieveMeasure() : dict
+
+  - _read_byte(cmd) : byte
+  - _read_u16(cmd) : uint16
+  - _write_byte(cmd, val) : void
 }
 
-class Temperature {
-  - float temperatureValue
-
-  + Temperature()
-  + retrieveMeasure()
-  + getTemperature()
+class SHTC3 {
+  + __init__() : void
+  + retrieveMeasure() : dict
 }
 
 PICamera --> Firefighter
-Humidity --> Firefighter
-Temperature --> Firefighter
+LPS22HB --> Firefighter
+SHTC3 --> Firefighter
 
 Captor <|-- PICamera
-Captor <|-- Humidity
-Captor <|-- Temperature
+Captor <|-- LPS22HB
+Captor <|-- SHTC3
 
 legend right
   La méthode "retrieveMeasure" demande au capteur de mesurer les données
